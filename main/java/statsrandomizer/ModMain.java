@@ -7,7 +7,6 @@ import legend.game.modding.Mod;
 import legend.game.modding.events.EventListener;
 
 import legend.game.modding.events.characters.CharacterStatsEvent;
-import legend.game.modding.events.gamestate.GameLoadedEvent;
 import legend.game.saves.ConfigRegistryEvent;
 
 import legend.game.modding.registries.Registrar;
