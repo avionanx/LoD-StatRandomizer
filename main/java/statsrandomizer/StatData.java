@@ -3,6 +3,8 @@ package statsrandomizer;
 import java.io.Serializable;
 
 public class StatData implements Serializable {
+
+    public int level;
     public int hp;
     public int bodyAtt;
     public int bodyMat;

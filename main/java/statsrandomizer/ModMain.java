@@ -7,7 +7,6 @@ import legend.game.modding.Mod;
 import legend.game.modding.events.EventListener;
 
 import legend.game.modding.events.characters.CharacterStatsEvent;
-import legend.game.modding.events.gamestate.GameLoadedEvent;
 import legend.game.saves.ConfigRegistryEvent;
 
 import legend.game.modding.registries.Registrar;
@@ -24,9 +23,8 @@ public class ModMain {
   public static final String MOD_ID = "stats-randomizer";
   public static final Registrar<ConfigEntry<?>, ConfigRegistryEvent> StatRegister = new Registrar<>(GameEngine.REGISTRIES.config,MOD_ID);
   public static final RegistryDelegate<StatConfigEntry> STAT = StatRegister.register("stats_random",StatConfigEntry::new);
-  /**Holds levels in memory.**/
-  private int[] charStatus = new int[9];
-  private int[] charIndexes = new int[]{0,3,4,5,6,7,8};
+
+  private final int[] charIndexes = new int[]{0,3,4,5,6,7,8};
 
   public ModMain() {
     GameEngine.EVENTS.register(this);
@@ -41,16 +39,19 @@ public class ModMain {
 
   @EventListener
   public void StatHandler(final CharacterStatsEvent event){
-    if(gameState_800babc8.charData_32c[event.characterId].partyFlags_04 == 0) return;
     StatConfigEntry entry = STAT.get();
     StatData[] data = CONFIG.getConfig(entry);
+
+    if(gameState_800babc8.charData_32c[event.characterId].partyFlags_04 == 0) return;
+
+
     //character leveled up OR they just joined the party
-    if(charStatus[event.characterId] != event.level || data[event.characterId] == null){
-      charStatus[event.characterId] = event.level;
+    if(data[event.characterId] == null || data[event.characterId].level != event.level){
       if(data[event.characterId] == null){
         StatData statData = new StatData();
         data[event.characterId] = statData;
       }
+      data[event.characterId].level = event.level;
       Random random = new Random();
       /*There's got to be a better way to do this*/
       LevelStuff08 levelStuff08 = levelStuff_800fbd30.get(charIndexes[random.nextInt(charIndexes.length)]).deref().get(event.level);
@@ -81,12 +82,4 @@ public class ModMain {
     event.bodyMagicAttack = data[event.characterId].bodyMat;
     event.bodyMagicDefence = data[event.characterId].bodyMdef;
   }
-  /**Initialize charStatus levels to loaded levels**/
-  @EventListener
-  public void initLevels (final GameLoadedEvent event){
-    for(int i = 0; i < event.gameState.charData_32c.length; i++){
-      charStatus[i] = event.gameState.charData_32c[i].level_12;
-    }
-  }
-
 }
