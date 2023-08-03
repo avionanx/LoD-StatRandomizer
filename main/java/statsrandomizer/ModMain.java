@@ -85,13 +85,4 @@ public class ModMain {
     event.bodyMagicAttack = data[event.characterId].bodyMat;
     event.bodyMagicDefence = data[event.characterId].bodyMdef;
   }
-
-  @EventListener
-  public void GameLoadDebugger(final GameLoadedEvent event){
-    StatConfigEntry entry = STAT.get();
-    StatData[] data = CONFIG.getConfig(entry);
-    for(int i = 0; i < 9; i++){
-      if(data[i] == null) continue;
-    }
-  }
 }
