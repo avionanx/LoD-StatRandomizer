@@ -2,11 +2,15 @@ package statsrandomizer;
 
 import java.io.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 import legend.game.saves.ConfigEntry;
 import legend.game.saves.ConfigStorageLocation;
 
 public class StatConfigEntry extends ConfigEntry<StatData[]> {
-
+    private static final Logger LOGGER = LogManager.getFormatterLogger();
     public StatConfigEntry(){
         super(new StatData[9], ConfigStorageLocation.SAVE,
                 (StatData[] arr)->
@@ -21,7 +25,7 @@ public class StatConfigEntry extends ConfigEntry<StatData[]> {
                         objectOutputStream.flush();
                         return byteArrayOutputStream.toByteArray();
                     }catch (IOException err){
-
+                        LOGGER.error("Failed to serialize stats: " + err.getMessage());
                     }
                     return new byte[]{};
                 },
@@ -38,7 +42,7 @@ public class StatConfigEntry extends ConfigEntry<StatData[]> {
                         }
                         return data;
                     }catch (IOException | ClassNotFoundException err){
-
+                        LOGGER.error("Failed to deserialize stats: " + err.getMessage());
                     }
                     return new StatData[9];
                 }
